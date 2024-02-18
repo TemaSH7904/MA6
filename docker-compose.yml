@@ -1,0 +1,34 @@
+version: '3.9'
+
+
+services:
+#  database:
+#    image: postgres
+#    restart: always
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: password
+#      POSTGRES_DB: Shalaev
+#    volumes:
+#      - ./pgdata:/var/lib/postgresql/data
+#    ports:
+#      - "5432:5432"
+
+
+  admin_service:
+    restart: on-failure
+    container_name: admin_service
+    build: ./admin_service/
+    ports:
+      - "8000:80"
+#    depends_on:
+#      - database
+
+  messenger_service:
+    restart: on-failure
+    container_name: messenger_service
+    build: ./messenger_service/
+    ports:
+      - "8001:80"
+#    depends_on:
+#      - database
