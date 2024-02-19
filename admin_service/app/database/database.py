@@ -10,6 +10,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
+
 class Message(Base):
     __tablename__ = 'messenger_shalaev'
 
