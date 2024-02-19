@@ -15,14 +15,12 @@ class TestIntegration(unittest.TestCase):
     # CMD: python tests/integration.py
 
     def test_1_login(self):
-        data = {'name': 'Artem'}
-        res = requests.post(f"{login_url}", json=data)
-        self.assertEqual(res.text, "You logged in as Artem")
+        res = requests.post(f"{login_url}?name=Artem")
+        self.assertEqual(res.text, '"You logged in as Artem"')
 
     def test_2_send_message(self):
-        data = {'receiver_name': 'test', "text": "hello"}
-        res = requests.post(f"{send_message_url}", json=data)
-        self.assertEqual(res.text, "Success")
+        res = requests.post(f"{send_message_url}?receiver_name=test&text=hello", )
+        self.assertEqual(res.text, '"Success"')
 
     def test_3_find_sent_message(self):
         res = requests.get(f"{sent_messages_url}?username=test").json()
@@ -31,26 +29,26 @@ class TestIntegration(unittest.TestCase):
             if message['receiver_name'] == 'test' and message['text'] == 'hello':
                 found = True
                 break
-        self.assertTrue(found, "Sent message was not found in the received messages")
+        self.assertTrue(found, True)
 
     def test_4_find_message_in_admin(self):
-        res = requests.get(f"{get_messages_url}")
+        res = requests.get(f"{get_messages_url}").json()
         found = False
         for message in res:
             if message['receiver_name'] == 'test' and message['text'] == 'hello':
                 found = True
                 break
-        self.assertTrue(found, "Sent message was not found in the received messages")
+        self.assertTrue(found, True)
 
     def test_5_delete_message(self):
         id = 0
-        res = requests.get(f"{get_messages_url}")
+        res = requests.get(f"{get_messages_url}").json()
         for message in res:
             if message['receiver_name'] == 'test' and message['text'] == 'hello':
-                id = message.id
+                id = message["id"]
                 break
-        res = requests.post(f"{delete_message_url}?id={id}")
-        self.assertEqual(res, "Success")
+        res = requests.delete(f"{delete_message_url}?message_id={id}")
+        self.assertEqual(res.text, '"Success"')
 
 if __name__ == '__main__':
     unittest.main()

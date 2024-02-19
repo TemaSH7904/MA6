@@ -62,6 +62,7 @@ async def delete_message(message_id: int, db: db_dependency):
     try:
         message = db.query(Message).filter(Message.id == message_id).first()
         db.delete(message)
+        db.commit()
         return "Success"
     except Exception as e:
         return "Cant find message"
