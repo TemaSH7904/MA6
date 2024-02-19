@@ -31,7 +31,7 @@ author = ""
 async def service_alive():
     return {'message': 'service alive'}
 
-@app.get("/login", status_code=status.HTTP_200_OK)
+@app.post("/login", status_code=status.HTTP_200_OK)
 async def login(name: str):
     global author
     author = name

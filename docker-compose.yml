@@ -2,17 +2,17 @@ version: '3.9'
 
 
 services:
-#  database:
-#    image: postgres
-#    restart: always
-#    environment:
-#      POSTGRES_USER: postgres
-#      POSTGRES_PASSWORD: password
-#      POSTGRES_DB: Shalaev
-#    volumes:
-#      - ./pgdata:/var/lib/postgresql/data
-#    ports:
-#      - "5432:5432"
+  database:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: Shalaev
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
 
 
   admin_service:

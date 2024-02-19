@@ -1,39 +1,53 @@
 import requests
 import unittest
 
-ticket_url = 'http://localhost:8000'
-statistics_url = 'http://localhost:8001'
-add_ticket_url = f'{ticket_url}/add_ticket'
-get_ticket_by_id_url = f'{ticket_url}/get_ticket_by_id'
-get_tickets_url = f'{ticket_url}/get_tickets'
+messenger_url = 'http://localhost:8001'
+login_url = f'{messenger_url}/login'
+send_message_url = f'{messenger_url}/send_message'
+sent_messages_url = f'{messenger_url}/get_messages_to_user'
 
-ticket = {
-    "id": 88,
-    "passenger_name": "Boyarkov",
-    "passport": "010101.010101",
-    "id_airplane": 17,
-    "direction": "New York"
-}
-
+admin_url = 'http://localhost:8000'
+get_messages_url = f'{admin_url}/get_messages'
+delete_message_url = f'{admin_url}/delete_message'
 
 class TestIntegration(unittest.TestCase):
     # CMD: python tests/integration.py
 
-    def add_ticket(self):
-        res = requests.post(add_ticket_url, json=ticket)
+    def test_1_login(self):
+        res = requests.post(f"{login_url}?name=Artem")
+        self.assertEqual(res, "You logged in as Artem")
+
+    def test_2_send_message(self):
+        res = requests.post(f"{send_message_url}?receiver_name=test&text=hello")
         self.assertEqual(res, "Success")
 
-    def test_ticket_get(self):
-        res = requests.get(f"{get_ticket_by_id_url}?ticket_id=1").json()
-        self.assertEqual(res['passenger_name'], "test")
-        self.assertEqual(res['passport'], "11111")
-        self.assertEqual(res['id_airplane'], 1)
-        self.assertEqual(res['direction'], "Moscow")
+    def test_3_find_sent_message(self):
+        res = requests.get(f"{sent_messages_url}?username=test").json()
+        found = False
+        for message in res:
+            if message['receiver_name'] == 'test' and message['text'] == 'hello':
+                found = True
+                break
+        self.assertTrue(found, "Sent message was not found in the received messages")
 
-    def fetch_tickets(self):
-        res = requests.get(get_tickets_url)
-        self.assertTrue(res != "Cant access database!")
+    def test_4_find_message_in_admin(self):
+        res = requests.get(f"{get_messages_url}")
+        found = False
+        for message in res:
+            if message['receiver_name'] == 'test' and message['text'] == 'hello':
+                found = True
+                break
+        self.assertTrue(found, "Sent message was not found in the received messages")
 
+    def test_5_delete_message(self):
+        id = 0
+        res = requests.get(f"{get_messages_url}")
+        for message in res:
+            if message['receiver_name'] == 'test' and message['text'] == 'hello':
+                id = message.id
+                break
+        res = requests.post(f"{delete_message_url}?id={id}")
+        self.assertEqual(res, "Success")
 
 if __name__ == '__main__':
     unittest.main()

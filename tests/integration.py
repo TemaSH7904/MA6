@@ -2,17 +2,15 @@ import unittest
 import requests
 import psycopg2
 from time import sleep
-import json
 
-ticket_url = 'http://localhost:8000'
-statistics_url = 'http://localhost:8001'
-add_ticket_url = f'{ticket_url}/add_ticket'
-get_ticket_by_id_url = f'{ticket_url}/get_ticket_by_id'
+messenger_url = 'http://localhost:8001'
+admin_url = 'http://localhost:8000'
+
 
 def check_connect():
     try:
         conn = psycopg2.connect(
-            dbname='TicketAirport',
+            dbname='Shalaev',
             user='postgres',
             password='password',
             host='localhost',
@@ -20,7 +18,7 @@ def check_connect():
         )
         conn.close()
         return True
-    except:
+    except Exception as e:
         return False
 
 
@@ -31,20 +29,13 @@ class TestIntegration(unittest.TestCase):
         sleep(5)
         self.assertEqual(check_connect(), True)
 
-    def test_ticket_service_connection(self):
-        r = requests.get("http://localhost:8000/health", verify=False)
-        self.assertEqual(r.status_code, 200)
-
-    def test_statistics_service_connection(self):
+    def test_messenger_service_connection(self):
         r = requests.get("http://localhost:8001/health", verify=False)
         self.assertEqual(r.status_code, 200)
 
-    def test_ticket_get(self):
-        res = requests.get(f"{get_ticket_by_id_url}?ticket_id=1").json()
-        self.assertTrue('passenger_name' in res.keys())
-        self.assertTrue('passport' in res.keys())
-        self.assertTrue('id_airplane' in res.keys())
-        self.assertTrue('direction' in res.keys())
+    def test_admin_service_connection(self):
+        r = requests.get("http://localhost:8000/health", verify=False)
+        self.assertEqual(r.status_code, 200)
 
 
 if __name__ == '__main__':

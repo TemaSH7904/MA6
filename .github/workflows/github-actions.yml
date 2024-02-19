@@ -10,38 +10,38 @@ on:
   workflow_dispatch:
 
 jobs:
-#  test:
-#    name: Run tests
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v3
-#
-#      - name: install dependencies
-#        run: |
-#          sudo apt update
-#          sudo apt install -y python3-pip
-#          pip install psycopg2-binary
-#          pip install pytest
-#
-#      - name: Prepare for tests (compose up)
-#        run: docker compose up -d --build
-#
-#
-#      - name: Run integration test
-#        run: python tests/integration.py
-#
-#
-#      - name: Run component test
-#        run: python tests/component.py
-#
-#
-#      - name: Clean up (compose down)
-#        run: docker compose down
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y python3-pip
+          pip install psycopg2-binary
+          pip install pytest
+
+      - name: Prepare for tests (compose up)
+        run: docker compose up -d --build
+
+
+      - name: Run integration test
+        run: python tests/integration.py
+
+
+      - name: Run component test
+        run: python tests/component.py
+
+
+      - name: Clean up (compose down)
+        run: docker compose down
 
   build_and_push_messenger_service:
     name: Build and push messenger service to Yandex Cloud
     runs-on: ubuntu-latest
-#    needs: [ test ]
+    needs: [ test ]
     steps:
       - uses: actions/checkout@v3
 
