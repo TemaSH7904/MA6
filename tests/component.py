@@ -1,5 +1,6 @@
 import requests
 import unittest
+import json
 
 messenger_url = 'http://localhost:8001'
 login_url = f'{messenger_url}/login'
@@ -14,12 +15,14 @@ class TestIntegration(unittest.TestCase):
     # CMD: python tests/integration.py
 
     def test_1_login(self):
-        res = requests.post(f"{login_url}?name=Artem")
-        self.assertEqual(res, "You logged in as Artem")
+        data = {'name': 'Artem'}
+        res = requests.post(f"{login_url}", json=data)
+        self.assertEqual(res.text, "You logged in as Artem")
 
     def test_2_send_message(self):
-        res = requests.post(f"{send_message_url}?receiver_name=test&text=hello")
-        self.assertEqual(res, "Success")
+        data = {'receiver_name': 'test', "text": "hello"}
+        res = requests.post(f"{send_message_url}", json=data)
+        self.assertEqual(res.text, "Success")
 
     def test_3_find_sent_message(self):
         res = requests.get(f"{sent_messages_url}?username=test").json()

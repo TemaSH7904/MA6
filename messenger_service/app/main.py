@@ -77,7 +77,7 @@ async def get_messages_from_user(username: str, db: db_dependency):
     except Exception as e:
         raise HTTPException(status_code=404, detail="Messages not found")
 
-@app.get("/get_messages_to")
+@app.get("/get_messages_to_user")
 async def get_messages_to_user(username: str, db: db_dependency):
     try:
         result = db.query(Message).filter(
