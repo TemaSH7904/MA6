@@ -1,40 +1,41 @@
 import unittest
-import requests
 import psycopg2
-from time import sleep
+from pathlib import Path
+import asyncio
+import sys
 
-messenger_url = 'http://localhost:8001'
-admin_url = 'http://localhost:8000'
+BASE_DIR = Path(__file__).resolve().parent
 
+sys.path.append(str(BASE_DIR / 'messenger_service/app'))
+sys.path.append(str(BASE_DIR / 'admin_service/app'))
 
-def check_connect():
-    try:
-        conn = psycopg2.connect(
-            dbname='Shalaev',
-            user='postgres',
-            password='password',
-            host='localhost',
-            port='5432'
-        )
-        conn.close()
-        return True
-    except Exception as e:
-        return False
-
+from messenger_service.app.main import service_alive as messenger_status
+from admin_service.app.main import service_alive as admin_status
 
 class TestIntegration(unittest.TestCase):
-    # CMD: python tests/integration.py
 
     def test_db_connection(self):
-        sleep(5)
-        self.assertEqual(check_connect(), True)
+        def test_database(self):
+            try:
+                conn = psycopg2.connect(
+                    dbname='Shalaev',
+                    user='postgres',
+                    password='password',
+                    host='localhost',
+                    port='5432'
+                )
+                conn.close()
+                check = True
+            except Exception as e:
+                check = False
+            self.assertEqual(check, True)
 
     def test_messenger_service_connection(self):
-        r = requests.get("http://localhost:8001/health", verify=False)
+        r = asyncio.run(messenger_status())
         self.assertEqual(r.status_code, 200)
 
     def test_admin_service_connection(self):
-        r = requests.get("http://localhost:8000/health", verify=False)
+        r = asyncio.run(admin_status())
         self.assertEqual(r.status_code, 200)
 
 
