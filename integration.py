@@ -32,11 +32,11 @@ class TestIntegration(unittest.TestCase):
 
     def test_messenger_service_connection(self):
         r = asyncio.run(messenger_status())
-        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r, {'message': 'service alive'})
 
     def test_admin_service_connection(self):
         r = asyncio.run(admin_status())
-        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r, {'message': 'service alive'})
 
 
 if __name__ == '__main__':
