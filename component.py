@@ -11,8 +11,7 @@ admin_url = 'http://localhost:8000'
 get_messages_url = f'{admin_url}/get_messages'
 delete_message_url = f'{admin_url}/delete_message'
 
-class TestIntegration(unittest.TestCase):
-    # CMD: python tests/integration.py
+class TestComponent(unittest.TestCase):
 
     def test_1_login(self):
         res = requests.post(f"{login_url}?name=Artem")
