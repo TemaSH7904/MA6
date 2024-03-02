@@ -22,8 +22,8 @@ jobs:
           sudo apt update
           sudo apt install -y python3-pip
           pip install psycopg2-binary
-          pip install pytest
-
+          pip install --no-cache-dir --upgrade -r messenger_service/requirements.txt
+          
       - name: Prepare for tests (compose up)
         run: docker compose up -d --build
 
@@ -31,11 +31,11 @@ jobs:
         run: sleep 10
 
       - name: Run integration test
-        run: python tests/integration.py
+        run: python integration.py
 
 
       - name: Run component test
-        run: python tests/component.py
+        run: python component.py
 
 
       - name: Clean up (compose down)
